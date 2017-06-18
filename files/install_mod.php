@@ -1,6 +1,6 @@
 <?php
 /***********************************************************************/
-
+// $Id$
 // Some info about your mod.
 $mod_title      = 'Topic curator';
 $mod_version    = '1.0';

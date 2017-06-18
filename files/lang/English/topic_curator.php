@@ -1,13 +1,12 @@
 <?php
-
+//$Id$
 // Language definitions used in viewtopic.php
 $lang_topic_curator_viewtopic = array(
   'Topic curator'	=>	'Topic curator',
   'Assign curator'	=>	'Assign curator',
 );
 
-
-
+// Language definitions used in topic_curator.php
 if ($curator_main == true)
 {
   $lang_topic_curator = array(
