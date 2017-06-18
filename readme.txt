@@ -5,12 +5,12 @@
 ##      Mod version:  1.0
 ##  Works on FluxBB:  1.5.10
 ##     Release date:  2017-06-18
-##      Review date:  YYYY-MM-DD (Leave unedited)
 ##           Author:  DenisVS (deniswebcomm@gmail.com)
 ##
-##      Description:  
+##      Description:  This mod allows the administrator and moderators to 
+##                    assign a curator of a topic chosen from regular users
+##                    who can manage a particular topic, except users ban.
 ##
-##   Repository URL:  http://fluxbb.org/resources/mods/xxx (Leave unedited)
 ##
 ##   Affected files:  delete.php
 ##                    edit.php
