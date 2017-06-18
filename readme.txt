@@ -179,20 +179,57 @@ if ($cur_post['mod_by'] == $pun_user['id'])
 #---------[ 14. OPEN ]---------------------------------------------------------
 #
 
-
-
-
-
-
-
-
-
-
-
+footer.php
 
 #
-#---------[ 6. REPLACE WITH ]-------------------------------------------------
+#---------[ 15. FIND (line: 58) ]---------------------------------------------
 #
+
+		echo "\t\t\t".'</dl>'."\n";
+	}
+
+	echo "\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>'."\n";
+}
+
+#
+#---------[ 16. REPLACE WITH ]-------------------------------------------------
+#
+
+		echo "\t\t\t\t".'<dd><span><a href="topic_curator.php?tid='.$id.'&amp;action=appoint'.$token_url.'">'.$lang_topic_curator_viewtopic['Assign curator'].'</a></span></dd>'."\n";
+		echo "\t\t\t".'</dl>'."\n";
+	}
+
+	echo "\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>'."\n";
+}
+
+if ($curator_rights["allow_close_topic"])
+{
+	echo "\t\t".'<div id="modcontrols" class="inbox">'."\n";
+	echo "\t\t\t".'<dl>'."\n";
+	echo "\t\t\t\t".'<dt><strong>'.$lang_topic['Mod controls'].'</strong></dt>'."\n";
+	if ($cur_topic['closed'] == '1')
+		echo "\t\t\t\t".'<dd><span><a href="topic_curator.php?open='.$id.$token_url.'">'.$lang_common['Open topic'].'</a></span></dd>'."\n";
+	else
+		echo "\t\t\t\t".'<dd><span><a href="topic_curator.php?close='.$id.$token_url.'">'.$lang_common['Close topic'].'</a></span></dd>'."\n";
+	
+	echo "\t\t\t".'</dl>'."\n";
+	echo "\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>'."\n";
+}
+
+#
+#---------[ 17. OPEN ]---------------------------------------------------------
+#
+
+
+
+
+
+
+
+
+
+
+
 
 
 
