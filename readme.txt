@@ -220,28 +220,187 @@ if ($curator_rights["allow_close_topic"])
 #---------[ 17. OPEN ]---------------------------------------------------------
 #
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+viewtopic.php
 
 #
-#---------[ 11. BEFORE, ADD ]-------------------------------------------------
+#---------[ 18. FIND (line: 84) ]---------------------------------------------
 #
 
 
+// Fetch some info about the topic
+if (!$pun_user['is_guest'])
+	$result = $db->query('SELECT t.subject, t.closed, t.num_replies, t.sticky, t.first_post_id, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies, s.user_id AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'topic_subscriptions AS s ON (t.id=s.topic_id AND s.user_id='.$pun_user['id'].') LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+else
+	$result = $db->query('SELECT t.subject, t.closed, t.num_replies, t.sticky, t.first_post_id, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies, 0 AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+
+#
+#---------[ 19. REPLACE WITH ]-------------------------------------------------
+#
+
+// Fetch some info about the topic
+if (!$pun_user['is_guest'])
+	$result = $db->query('SELECT t.subject, t.closed, t.num_replies, t.sticky, t.first_post_id, t.mod_by, t.flags, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies, s.user_id AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'topic_subscriptions AS s ON (t.id=s.topic_id AND s.user_id='.$pun_user['id'].') LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+else
+	$result = $db->query('SELECT t.subject, t.closed, t.num_replies, t.sticky, t.first_post_id, t.mod_by, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies, 0 AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+
+#
+#---------[ 20. FIND (line: 91) ]---------------------------------------------
+#
+
+$cur_topic = $db->fetch_assoc($result);
+
+#
+#---------[ 21. AFTER, ADD ]---------------------------------------------------
+#
+
+require PUN_ROOT.'lang/'.$pun_user['language'].'/topic_curator.php';
+if (!$pun_user['is_guest'])
+{
+	$curator_rights["allow_post replies"] =	$curator_rights["allow_delete_posts"] = $curator_rights["allow_close_topic"] = $curator_rights["allow_edit_self"] = $curator_rights["allow_edit_others"] = false;
+	if ($cur_topic['mod_by'] == $pun_user['id'] && $cur_topic["flags"])
+	{	
+		$curator_rights["allow_post replies"] = true;
+		$flags =  str_split( trim (sprintf("%'.08d\n", decbin ($cur_topic["flags"]))));
+		if ($flags[7] == 1)	$curator_rights["allow_delete_posts"] = true;
+		if ($flags[6] == 1)	$curator_rights["allow_close_topic"] = true;
+		if ($flags[5] == 1)	$curator_rights["allow_edit_self"] = true;
+		if ($flags[4] == 1)	$curator_rights["allow_edit_others"] = true;
+	}
+}
+
+#
+#---------[ 22. FIND (line: 102) ]---------------------------------------------
+#
+
+	if (($cur_topic['post_replies'] == '' && $pun_user['g_post_replies'] == '1') || $cur_topic['post_replies'] == '1' || $is_admmod)
+
+#
+#---------[ 23. REPLACE WITH ]-------------------------------------------------
+#
+
+	if (($cur_topic['post_replies'] == '' && $pun_user['g_post_replies'] == '1') || $cur_topic['post_replies'] == '1' || $is_admmod || $curator_rights['allow_post replies'] )
+
+#
+#---------[ 24. FIND (line: 111) ]---------------------------------------------
+#
+
+	if ($is_admmod)
+		$post_link .= ' / <a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a>';
+
+#
+#---------[ 25. REPLACE WITH ]-------------------------------------------------
+#
+
+	if ($is_admmod || $curator_rights["allow_post replies"])
+		$post_link .= ' / <a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a>';
+
+#
+#---------[ 26. FIND (line: 144) ]---------------------------------------------
+#
+
+	($cur_topic['closed'] == '0' || $is_admmod))
+
+#
+#---------[ 27. REPLACE WITH ]-------------------------------------------------
+#
+
+	($cur_topic['closed'] == '0' || $is_admmod || $curator_rights["allow_post replies"]))
+
+#
+#---------[ 26. FIND (line: 324) ]---------------------------------------------
+#
+
+	// Generation post action array (quote, edit, delete etc.)
+	if (!$is_admmod)
+	{
+		if (!$pun_user['is_guest'])
+
+#
+#---------[ 27. AFTER, ADD ]---------------------------------------------------
+#
+
+			$action_links['delete'] = false;
+			$action_links['edit'] = false;
+
+#
+#---------[ 28. FIND (line: 330) ]---------------------------------------------
+#
+
+			{
+				if ((($start_from + $post_count) == 1 && $pun_user['g_delete_topics'] == '1') || (($start_from + $post_count) > 1 && $pun_user['g_delete_posts'] == '1'))
+					$post_actions[] = '<li class="postdelete"><span><a href="delete.php?id='.$cur_post['id'].'">'.$lang_topic['Delete'].'</a></span></li>';
+				if ($pun_user['g_edit_posts'] == '1')
+					$post_actions[] = '<li class="postedit"><span><a href="edit.php?id='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a></span></li>';
+			}
+
+#
+#---------[ 29. REPLACE WITH ]-------------------------------------------------
+#
+
+			{
+				if ((($start_from + $post_count) == 1 && $pun_user['g_delete_topics'] == '1') || (($start_from + $post_count) > 1 && $pun_user['g_delete_posts'] == '1'))
+				{
+					$post_actions[] = '<li class="postdelete"><span><a href="delete.php?id='.$cur_post['id'].'">'.$lang_topic['Delete'].'</a></span></li>';
+					$action_links['delete'] = true;
+				}
+				if ($pun_user['g_edit_posts'] == '1')
+				{
+					$post_actions[] = '<li class="postedit"><span><a href="edit.php?id='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a></span></li>';
+					$action_links['edit'] = true;
+				}
+			}
 
 
 #
-#---------[ 12. SAVE/UPLOAD ]-------------------------------------------------
+#---------[ 30. FIND (line: 348) ]---------------------------------------------
+#
+
+		}
+		$post_actions[] = '<li class="postquote"><span><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_topic['Quote'].'</a></span></li>';
+	}
+
+#
+#---------[ 31. REPLACE WITH ]-------------------------------------------------
+#
+
+			$action_links['delete'] = true;
+			$action_links['edit'] = true;
+		}
+		$post_actions[] = '<li class="postquote"><span><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_topic['Quote'].'</a></span></li>';
+	}
+
+if ($curator_rights["allow_post replies"])
+{	
+	if ($cur_post["g_id"] != PUN_ADMIN && (isset($mods_array) ?  !array_key_exists($cur_post["username"], $mods_array) : false))
+	{
+		if ($curator_rights["allow_delete_posts"] && !$action_links['delete'])
+		{
+			$post_actions[] = '<li class="postdelete"><span><a href="delete.php?id='.$cur_post['id'].'">'.$lang_topic['Delete'].'</a></span></li>';
+		}
+		if ($curator_rights["allow_edit_self"] && !$action_links['edit'] && $cur_post['id'] == $pun_user['id'])
+		{
+			$post_actions[] = '<li class="postedit"><span><a href="edit.php?id='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a></span></li>';
+		}
+		if ($curator_rights["allow_edit_others"] && !$action_links['edit'] )
+		{
+			$post_actions[] = '<li class="postedit"><span><a href="edit.php?id='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a></span></li>';
+		}
+	}
+}
+
+
+#
+#---------[ 32. FIND (line: 376) ]---------------------------------------------
+#
+
+						<dd class="usertitle"><strong><?php echo $user_title ?></strong></dd>
+
+#
+#---------[ 33. AFTER, ADD ]---------------------------------------------------
+#
+
+<?php if ($cur_topic['mod_by'] == $cur_post['poster_id']) {echo "\t\t\t\t\t\t".'<dd class="curator"><strong>'.$lang_topic_curator_viewtopic['Topic curator'].'</strong></dd>'."\n";} ?>
+
+#
+#---------[ 34. SAVE/UPLOAD ]-------------------------------------------------
 #
