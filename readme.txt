@@ -316,11 +316,18 @@ if (!$pun_user['is_guest'])
 		if (!$pun_user['is_guest'])
 
 #
-#---------[ 29. AFTER, ADD ]---------------------------------------------------
+#---------[ 29. REPLACE WITH ]-------------------------------------------------
 #
 
+	// Generation post action array (quote, edit, delete etc.)
+	if (!$is_admmod)
+	{
+		if (!$pun_user['is_guest']) 
+		{
 			$action_links['delete'] = false;
 			$action_links['edit'] = false;
+			$post_actions[] = '<li class="postreport"><span><a href="misc.php?report='.$cur_post['id'].'">'.$lang_topic['Report'].'</a></span></li>';
+    }
 
 #
 #---------[ 30. FIND (line: 330) ]---------------------------------------------
