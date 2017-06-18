@@ -107,6 +107,7 @@ if ($cur_post['mod_by'] == $pun_user['id'])
 		if ($poster_group != PUN_ADMIN && (isset($mods_array) ?  !array_key_exists($cur_post["poster"], $mods_array) : false))
 		{	
 			// This dirty trick to simplify editing.
+      $pun_user['g_deledit_interval'] = 0;  // For Timelimit by Visman			
 			$pun_user['g_delete_posts'] = '1';
 			$pun_user['g_delete_topics'] = '1';
 			$cur_post['poster_id'] = $pun_user['id'];
@@ -167,6 +168,7 @@ if ($cur_post['mod_by'] == $pun_user['id'])
 		if ($poster_group != PUN_ADMIN && (isset($mods_array) ?  !array_key_exists($cur_post["poster"], $mods_array) : false))
 		{	
 			// This dirty trick to simplify editing.
+      $pun_user['g_deledit_interval'] = 0;  // For Timelimit by Visman
 			$pun_user['g_edit_posts'] = '1';
 			if ($curator_rights["allow_edit_others"])	{
 				$cur_post['poster_id'] = $pun_user['id'];
