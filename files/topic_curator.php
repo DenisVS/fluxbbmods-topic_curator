@@ -22,7 +22,10 @@ if ($pun_user['is_admmod'] && $_GET["query"] == "ajax" && isset($_POST['term']))
 
 $curator_main = true;
 // Load the viewtopic.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/topic_curator.php';
+if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/topic_curator.php'))
+	require PUN_ROOT.'lang/'.$pun_user['language'].'/topic_curator.php';
+else
+	require PUN_ROOT.'lang/English/topic_curator.php';
 
 // Interface for admins and moderators
 if ($pun_user['is_admmod'] && isset($_GET['tid']) && $_GET['action'] == "appoint")	

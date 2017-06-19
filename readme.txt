@@ -255,7 +255,12 @@ $cur_topic = $db->fetch_assoc($result);
 #---------[ 21. AFTER, ADD ]---------------------------------------------------
 #
 
-require PUN_ROOT.'lang/'.$pun_user['language'].'/topic_curator.php';
+
+if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/topic_curator.php'))
+	require PUN_ROOT.'lang/'.$pun_user['language'].'/topic_curator.php';
+else
+	require PUN_ROOT.'lang/English/topic_curator.php';
+
 if (!$pun_user['is_guest'])
 {
 	$curator_rights["allow_post replies"] =	$curator_rights["allow_delete_posts"] = $curator_rights["allow_close_topic"] = $curator_rights["allow_edit_self"] = $curator_rights["allow_edit_others"] = false;
@@ -309,27 +314,31 @@ if (!$pun_user['is_guest'])
 	($cur_topic['closed'] == '0' || $is_admmod || $curator_rights["allow_post replies"]))
 
 #
-#---------[ 28. FIND (line: 324) ]---------------------------------------------
+#---------[ 28. FIND (line: 325) ]---------------------------------------------
 #
 
-	// Generation post action array (quote, edit, delete etc.)
 	if (!$is_admmod)
 	{
 		if (!$pun_user['is_guest'])
+			$post_actions[] = '<li class="postreport"><span><a href="misc.php?report='.$cur_post['id'].'">'.$lang_topic['Report'].'</a></span></li>';
+ 
+		if ($cur_topic['closed'] == '0')
 
 #
 #---------[ 29. REPLACE WITH ]-------------------------------------------------
 #
 
-	// Generation post action array (quote, edit, delete etc.)
 	if (!$is_admmod)
 	{
-		if (!$pun_user['is_guest']) 
+		if (!$pun_user['is_guest'])
 		{
 			$action_links['delete'] = false;
 			$action_links['edit'] = false;
 			$post_actions[] = '<li class="postreport"><span><a href="misc.php?report='.$cur_post['id'].'">'.$lang_topic['Report'].'</a></span></li>';
-    }
+		}
+
+		if ($cur_topic['closed'] == '0')
+
 
 #
 #---------[ 30. FIND (line: 330) ]---------------------------------------------
