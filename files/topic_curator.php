@@ -37,7 +37,7 @@ if ($pun_user['is_admmod'] && isset($_GET['tid']) && $_GET['action'] == "appoint
 	require PUN_ROOT.'header.php';
   $tid = $_GET['tid'];
   // Fetch some info about the post, the topic and the forum
-  $result = $db->query("SELECT t.id, t.subject, t.flags , t.mod_by, t.forum_id, f.id AS f_id, f.moderators, u.username AS user_name FROM " . $db->prefix . "forums AS f INNER JOIN " . $db->prefix . "topics AS t LEFT JOIN " . $db->prefix . "users AS u ON t.mod_by=u.id AND f.id=t.forum_id WHERE t.id ='".$tid."'");
+  $result = $db->query("SELECT t.id, t.subject, t.flags , t.mod_by, t.forum_id, f.id AS f_id, f.moderators, u.username AS user_name FROM " . $db->prefix . "forums AS f INNER JOIN " . $db->prefix . "topics AS t LEFT JOIN " . $db->prefix . "users AS u ON t.mod_by=u.id AND f.id=t.forum_id WHERE t.id ='".$tid."'  AND f.id=forum_id");
 
   $cur_topic = $db->fetch_assoc($result);
 
