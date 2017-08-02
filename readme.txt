@@ -2,7 +2,7 @@
 ##
 ##        Mod title:  Topic curator
 ##
-##      Mod version:  1.0.2
+##      Mod version:  1.0.3
 ##  Works on FluxBB:  1.5.10
 ##     Release date:  2017-08-02
 ##           Author:  DenisVS (deniswebcomm@gmail.com)
@@ -16,6 +16,7 @@
 ##                    edit.php
 ##                    footer.php
 ##                    viewtopic.php
+##                    post.php
 ##                    
 ##
 ##       Affects DB:  Yes
@@ -419,6 +420,44 @@ if ($curator_rights["allow_post replies"])
 
 <?php if ($cur_topic['mod_by'] == $cur_post['poster_id']) {echo "\t\t\t\t\t\t".'<dd class="curator"><strong>'.$lang_topic_curator_viewtopic['Topic curator'].'</strong></dd>'."\n";} ?>
 
+
+
 #
-#---------[ 36. SAVE/UPLOAD ]-------------------------------------------------
+#---------[ 36. OPEN ]---------------------------------------------------------
+#
+
+post.php
+
+#
+#---------[ 37. FIND (line: 24) ]---------------------------------------------
+#
+
+
+	$result = $db->query('SELECT f.id, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.subject, t.closed, s.user_id AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') LEFT JOIN '.$db->prefix.'topic_subscriptions AS s ON (t.id=s.topic_id AND s.user_id='.$pun_user['id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$tid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
+
+#
+#---------[ 38. REPLACE WITH ]-------------------------------------------------
+#
+
+	$result = $db->query('SELECT f.id, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.subject, t.closed, t.mod_by, t.flags, s.user_id AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') LEFT JOIN '.$db->prefix.'topic_subscriptions AS s ON (t.id=s.topic_id AND s.user_id='.$pun_user['id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$tid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
+
+
+#
+#---------[ 39. FIND ]---------------------------------------------
+#
+
+$cur_posting = $db->fetch_assoc($result);
+
+#
+#---------[ 40. AFTER, ADD ]---------------------------------------------------
+#
+
+// Are we the curator of our own topic?
+if ($cur_posting['mod_by'] == $pun_user['id'])
+{
+  $cur_posting['closed'] = 0;
+}
+
+#
+#---------[ 41. SAVE/UPLOAD ]-------------------------------------------------
 #
