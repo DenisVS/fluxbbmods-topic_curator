@@ -2,9 +2,9 @@
 ##
 ##        Mod title:  Topic curator
 ##
-##      Mod version:  1.0.1
+##      Mod version:  1.0.2
 ##  Works on FluxBB:  1.5.10
-##     Release date:  2017-06-19
+##     Release date:  2017-08-02
 ##           Author:  DenisVS (deniswebcomm@gmail.com)
 ##
 ##      Description:  This mod allows the administrator and moderators to 
