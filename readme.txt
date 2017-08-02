@@ -395,7 +395,7 @@ if ($curator_rights["allow_post replies"])
 		{
 			$post_actions[] = '<li class="postdelete"><span><a href="delete.php?id='.$cur_post['id'].'">'.$lang_topic['Delete'].'</a></span></li>';
 		}
-		if ($curator_rights["allow_edit_self"] && !$action_links['edit'] && $cur_post['id'] == $pun_user['id'])
+		if ($curator_rights["allow_edit_self"] && !$action_links['edit'] && $cur_post['poster_id'] == $pun_user['id'])
 		{
 			$post_actions[] = '<li class="postedit"><span><a href="edit.php?id='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a></span></li>';
 		}
